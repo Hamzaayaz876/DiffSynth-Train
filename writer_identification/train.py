@@ -285,7 +285,7 @@ if __name__ == '__main__':
     mode = modelist[0]
     mod = DeepWriter_Train(dataset=args.dataset, mode=mode, seed=args.seed,subfolder=args.subfolder,
                            train_folder=args.train_folder,
-                           tfolder=args.tfolder,dataloader=args.dataloader,dataset_path=args.dataset_path
+                           tfolder=args.tfolder,dataloader=args.dataloader,dataset_path=args.dataset_path,
                            print_label=args.print_label,
                            batch_size=args.batch_size)
     mod.train_loops(0,150)
