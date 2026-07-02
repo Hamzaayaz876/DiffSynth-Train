@@ -57,13 +57,13 @@ def seed_worker(worker_id):
 
 class DeepWriter_Train:
     def __init__(self, dataset='CVL', imgtype='png', mode='vertical', seed=42,subfolder=None,tfolder=None,
-                 train_folder=None,dataloader='binarised', print_label='', batch_size=16):
+                 train_folder=None,image_type='binarised',dataset_path='', print_label='', batch_size=16):
         set_seed(seed)
         self.dataset = dataset
-        self.dataloader=dataloader
-        r = "/HOME/yazbeckh/Writer_identification_stuff/rgb_fromscratch_exp"
-        self.labelfolder = r + subfolder
-        self.folder = r + subfolder
+        self.image_type=image_type
+        self.dataset_path = dataset_path
+        self.labelfolder = dataset_path + subfolder
+        self.folder = dataset_path + subfolder
         if not os.path.exists(self.folder):
             print('****** Warning: the dataset %s does not existed!******'%dataset)
             print('Please go to the following website to check how to download the dataset:')
@@ -86,9 +86,9 @@ class DeepWriter_Train:
         elif self.dataset == 'bullinger':
             self.imgtype = 'png'
             
-        if self.dataloader == 'binarised':
+        if self.image_type == 'binarised':
             dt = bindset
-        elif self.dataset == 'grayscale':
+        elif self.image_type == 'grayscale':
             dt=dset
             
         self.model_dir = 'model'
@@ -270,11 +270,12 @@ class DeepWriter_Train:
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset_path', type=str, required=True, help='Dataset path')
     parser.add_argument('--dataset', type=str, default='CVL', help='Dataset CVL or bullinger')
-    parser.add_argument('--dataloader', type=str, default='binarised', help='Dataloader images type grayscale or binarised')
+    parser.add_argument('--image_type', type=str, default='binarised', help='Dataloader images type grayscale or binarised')
     parser.add_argument('--subfolder', type=str, default='', help='Path to a subfolder if exists')
-    parser.add_argument('--train_folder', type=str, default='/train/', help='Path to training folder')
-    parser.add_argument('--tfolder', type=str,default='/test/', help='Path to test folder')
+    parser.add_argument('--train_folder', type=str, default='/train/', help='trainset folder name')
+    parser.add_argument('--tfolder', type=str,default='/test/', help='testset folder name')
     parser.add_argument('--print_label',  type=str, default='',    help='Label printed at startup')
     parser.add_argument('--batch_size',   type=int, default=16,    help='Batch size')
     parser.add_argument('--seed',   type=int, default=42,    help='seed ')
@@ -284,7 +285,7 @@ if __name__ == '__main__':
     mode = modelist[0]
     mod = DeepWriter_Train(dataset=args.dataset, mode=mode, seed=args.seed,subfolder=args.subfolder,
                            train_folder=args.train_folder,
-                           tfolder=args.tfolder,dataloader=args.dataloader,
+                           tfolder=args.tfolder,dataloader=args.dataloader,dataset_path=args.dataset_path
                            print_label=args.print_label,
                            batch_size=args.batch_size)
     mod.train_loops(0,150)
